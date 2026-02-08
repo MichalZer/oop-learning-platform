@@ -35,5 +35,5 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// Exporting the model using CommonJS syntax
-module.exports = mongoose.model("User", userSchema);
+// Exporting the model using ES6 syntax
+export default mongoose.model("User", userSchema);
