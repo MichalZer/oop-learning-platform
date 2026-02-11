@@ -1,5 +1,5 @@
 import mongoose from"mongoose";
-import { use } from "react";
+import User from "./User.js";
 
 const progressSchema = new mongoose.Schema({
     userId:{type: mongoose.Schema.Types.ObjectId, ref: 'User'},
