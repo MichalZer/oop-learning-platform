@@ -15,7 +15,7 @@ app.use(express.json()); // Parses incoming JSON requests
 
 // Routes
 // All routes inside authRoutes will be prefixed with /api
-app.use("/api", authRoutes);
+app.use("/api/auth", authRoutes);
 
 // Export the app instance for use in server.js (or for testing)
 export default app;
