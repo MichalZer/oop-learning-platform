@@ -31,7 +31,7 @@ export default function Register() {
       setLoading(true);
 
       // POST http://localhost:5000/api/auth/register
-      await api.post("/register", { name, email, password });
+      await api.post("/auth/register", { name, email, password });
 
       setSuccess("Account created! Redirecting to login...");
       setTimeout(() => navigate("/login"), 800);

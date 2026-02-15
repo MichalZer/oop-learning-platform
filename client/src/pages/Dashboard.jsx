@@ -1,33 +1,82 @@
-import { Button, Container, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Button, Container, Typography, Card, CardContent, CardActions, Grid, Alert } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import { removeToken } from "../utils/auth";
+import { getTopics } from "../services/topics.api";
 
-/**
- * Dashboard page
- * This page is accessible only when the user is logged in.
- */
 export default function Dashboard() {
-  /**
-   * Logout handler
-   * Removes the token and redirects to login page
-   */
+  const [topics, setTopics] = useState([]);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
   const handleLogout = () => {
     removeToken();
     window.location.href = "/login";
   };
 
+  useEffect(() => {
+    let alive = true;
+
+    async function load() {
+      try {
+        setError("");
+        const data = await getTopics();
+        if (!alive) return;
+        setTopics(data);
+      } catch (e) {
+        if (!alive) return;
+        setError(e?.response?.data?.message || "Failed to load topics");
+      } finally {
+        if (!alive) return;
+        setLoading(false);
+      }
+    }
+
+    load();
+    return () => { alive = false; };
+  }, []);
+
   return (
     <Container sx={{ mt: 6 }}>
-      <Typography variant="h4" gutterBottom>
-        Dashboard
-      </Typography>
+      <Grid container alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
+        <Grid item>
+          <Typography variant="h4" gutterBottom>
+            Dashboard
+          </Typography>
+          <Typography variant="body1">
+            Choose a topic to start learning
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Button variant="contained" color="error" onClick={handleLogout}>
+            Logout
+          </Button>
+        </Grid>
+      </Grid>
 
-      <Typography variant="body1" sx={{ mb: 3 }}>
-        You are logged in.
-      </Typography>
+      {loading && <Typography sx={{ mt: 2 }}>Loading...</Typography>}
+      {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
 
-      <Button variant="contained" color="error" onClick={handleLogout}>
-        Logout
-      </Button>
+      <Grid container spacing={2} sx={{ mt: 1 }}>
+        {topics.map((t) => (
+          <Grid item xs={12} md={6} lg={4} key={t._id}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6">{t.title}</Typography>
+                <Typography variant="body2" sx={{ mt: 1 }}>
+                  {t.description}
+                </Typography>
+              </CardContent>
+              <CardActions>
+                <Button onClick={() => navigate(`/topic/${t._id}`)}>
+                  Start learning
+                </Button>
+              </CardActions>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
     </Container>
   );
 }

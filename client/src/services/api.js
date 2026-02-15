@@ -6,8 +6,9 @@ import { getToken } from "../utils/auth";
  * Our backend auth routes are under: /api/auth
  */
 const api = axios.create({
-  baseURL: "http://localhost:5000/api/auth",
+  baseURL: "http://127.0.0.1:5000/api",
 });
+
 
 /*
  * Request interceptor:
@@ -16,11 +17,7 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token = getToken();
-
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-
+    if (token) config.headers.Authorization = `Bearer ${token}`;
     return config;
   },
   (error) => Promise.reject(error)

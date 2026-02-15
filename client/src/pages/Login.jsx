@@ -35,7 +35,7 @@ export default function Login() {
       setLoading(true);
 
       // POST http://localhost:5000/api/auth/login
-      const res = await api.post("/login", { email, password });
+      const res = await api.post("/auth/login", { email, password });
 
       const token = res?.data?.token;
       if (!token) {
