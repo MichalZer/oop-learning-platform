@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Container, Typography, Card, CardContent, CardActions, Grid, Alert } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { removeToken } from "../utils/auth";
 import { getTopics } from "../services/topics.api";
 
@@ -52,6 +52,13 @@ export default function Dashboard() {
           <Button variant="contained" color="error" onClick={handleLogout}>
             Logout
           </Button>
+          <Button variant="outlined" onClick={() => navigate("/builder")}>
+            Open Builder
+         </Button>
+          <Button component={Link} to="/my-practices" variant="outlined">
+           My Practices
+         </Button>
+
         </Grid>
       </Grid>
 

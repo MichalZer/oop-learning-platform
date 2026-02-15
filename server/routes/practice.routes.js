@@ -15,4 +15,12 @@ router.post("/practice/save", auth, async (req, res) => {
   res.json(practice);
 });
 
+router.get("/practice/mine", auth, async (req, res) => {
+  const practices = await Practice.find({
+    userId: req.user.userId,
+  }).sort({ createdAt: -1 });
+
+  res.json(practices);
+});
+
 export default router;

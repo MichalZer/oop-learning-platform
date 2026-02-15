@@ -4,6 +4,9 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import { isLoggedIn } from "./utils/auth";
 import TopicPage from "./pages/TopicPage";
+import BuilderPage from "./pages/BuilderPage";
+import MyPracticesPage from "./pages/MyPracticesPage";
+
 
 /**
  * Wrapper for protected routes
@@ -38,14 +41,30 @@ export default function App() {
         />
 
         <Route
-         path="/topic/:id"
+          path="/topic/:id"
+          element={
+           <ProtectedRoute>
+             <TopicPage />
+           </ProtectedRoute>
+         }
+       />
+       <Route
+          path="/builder"
          element={
-          <ProtectedRoute>
-            <TopicPage />
-          </ProtectedRoute>
-        }
-/>
-
+           <ProtectedRoute>
+             <BuilderPage />
+           </ProtectedRoute>
+          }
+       />
+       
+       <Route
+          path="/my-practices"
+         element={
+           <ProtectedRoute>
+             <MyPracticesPage />
+           </ProtectedRoute>
+          }
+        />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/login" replace />} />
