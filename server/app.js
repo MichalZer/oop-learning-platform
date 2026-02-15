@@ -5,6 +5,8 @@ import { connectDB } from "./config/db.js";
 import authRoutes from "./routes/auth.routes.js";
 import topicRoutes from "./routes/Topic.route.js";
 import ProgressRoutes from "./routes/Progress.routes.js";
+import practiceRoutes from "./routes/practice.routes.js";
+import generateRoutes from "./routes/generate.routes.js";
 
 const app = express();
 
@@ -20,6 +22,8 @@ app.use(express.json()); // Parses incoming JSON requests
 app.use("/api/auth", authRoutes);
 app.use("/api", topicRoutes);
 app.use("/api", ProgressRoutes);
+app.use("/api", generateRoutes);
+app.use("/api", practiceRoutes);
 
 
 // Export the app instance for use in server.js (or for testing)
