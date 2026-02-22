@@ -7,6 +7,7 @@ import topicRoutes from "./routes/Topic.route.js";
 import ProgressRoutes from "./routes/Progress.routes.js";
 import practiceRoutes from "./routes/practice.routes.js";
 import generateRoutes from "./routes/generate.routes.js";
+import quizRoutes from "./routes/quiz.routes.js";
 
 const app = express();
 
@@ -24,6 +25,8 @@ app.use("/api", topicRoutes);
 app.use("/api", ProgressRoutes);
 app.use("/api", generateRoutes);
 app.use("/api", practiceRoutes);
+
+app.use("/api/quiz", quizRoutes);
 
 
 // Export the app instance for use in server.js (or for testing)
