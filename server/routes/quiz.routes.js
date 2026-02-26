@@ -9,18 +9,23 @@ const router = express.Router();
 router.get('/:topicId', async (req, res) => {
   try {
     const { topicId } = req.params;
-    const {lang}=req.query;
-     const quiz = await Quiz.findOne({ topicId, language: lang })
-   
-      if (!quiz || quiz.questions.length === 0) {
+    const { lang } = req.query;
+
+    if (!lang) {
+      return res.status(400).json({ message: "Language is required" });
+    }
+
+    const quiz = await Quiz.findOne({ topicId, language: lang });
+
+    if (!quiz || quiz.questions.length === 0) {
       return res.status(404).json({ message: "Quiz not found" });
     }
-   const safeQuestions = quiz.questions.map(q => ({
+    const safeQuestions = quiz.questions.map((q) => ({
       _id: q._id,
       question: q.questionText,
-      options: q.options
+      options: q.options,
     }));
- 
+
     res.json({ questions: safeQuestions });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -33,7 +38,12 @@ router.get('/:topicId', async (req, res) => {
 router.post("/submit", authMiddleware, async (req, res) => {
   try {
     const { topicId, language, answers } = req.body;
-    const userId = req.user.id;
+    const userId = req.user.userId; // token payload uses userId
+
+    // basic validation to protect against double-click or empty payload
+    if (!answers || !Array.isArray(answers) || answers.length === 0) {
+      return res.status(400).json({ message: "Invalid answers" });
+    }
 
     const quiz = await Quiz.findOne({ topicId, language });
 

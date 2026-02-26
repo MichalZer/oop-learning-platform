@@ -4,7 +4,7 @@ import "dotenv/config";
 import { connectDB } from "./config/db.js"; 
 import authRoutes from "./routes/auth.routes.js";
 import topicRoutes from "./routes/Topic.route.js";
-import ProgressRoutes from "./routes/Progress.routes.js";
+import ProgressRoutes from "./routes/progress.routes.js";
 import practiceRoutes from "./routes/practice.routes.js";
 import generateRoutes from "./routes/generate.routes.js";
 import quizRoutes from "./routes/quiz.routes.js";

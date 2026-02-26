@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import { Button, Container, Typography, Card, CardContent, CardActions, Grid, Alert } from "@mui/material";
+import { Button, Container, Typography, Card, CardContent, CardActions, Grid, Alert, LinearProgress, Box } from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
 import { removeToken } from "../utils/auth";
 import { getTopics } from "../services/topics.api";
+import { getProgressSummary } from "../services/progress.api";
 
 export default function Dashboard() {
   const [topics, setTopics] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [summary, setSummary] = useState(null);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -21,9 +23,13 @@ export default function Dashboard() {
     async function load() {
       try {
         setError("");
-        const data = await getTopics();
+        const [topicsData, summaryData] = await Promise.all([
+          getTopics(),
+          getProgressSummary(),
+        ]);
         if (!alive) return;
-        setTopics(data);
+        setTopics(topicsData);
+        setSummary(summaryData.progress);
       } catch (e) {
         if (!alive) return;
         setError(e?.response?.data?.message || "Failed to load topics");
@@ -63,6 +69,14 @@ export default function Dashboard() {
       </Grid>
 
       {loading && <Typography sx={{ mt: 2 }}>Loading...</Typography>}
+      {!loading && summary !== null && (
+        <Box sx={{ mb: 2 }}>
+          <Typography variant="body2" gutterBottom>
+            Overall progress: {summary}%
+          </Typography>
+          <LinearProgress variant="determinate" value={summary} />
+        </Box>
+      )}
       {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
 
       <Grid container spacing={2} sx={{ mt: 1 }}>

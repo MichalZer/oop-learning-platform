@@ -1,28 +1,28 @@
 import express from "express";
-import {
-  generateJS,
-  generatePython,
-} from "../services/codeGenerator/generator.js";
-import {
-  generateEmojiJS,
-  generateEmojiPython,
-} from "../services/codeGenerator/emojiGenerator.js";
+import { generateCode } from "../generators/index.js";
 
 const router = express.Router();
 
 router.post("/generate", (req, res) => {
   try {
-    const { Language, objectName, properties, hasModes } = req.body;
-    let code;
-    if (objectName === "Emoji") {
-      code = Language === "python" ? generateEmojiPython() : generateEmojiJS();
-    } else {
-      code =
-        Language === "python"
-          ? generatePython({ objectName, properties, hasModes })
-          : generateJS({ objectName, properties, hasModes });
+    const {
+      language,
+      objectName,
+      properties,
+      hasModes,
+      hasMethods,
+    } = req.body;
+
+    // basic input validation
+    if (!language || !objectName) {
+      return res
+        .status(400)
+        .json({ message: "language and objectName are required" });
     }
-    res.json({ code: code });
+
+    const data = { objectName, properties, hasModes, hasMethods };
+    const code = generateCode(language, data);
+    res.json({ code });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

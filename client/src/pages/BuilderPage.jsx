@@ -120,10 +120,10 @@ export default function BuilderPage() {
     try {
       setLoading(true);
       const payload = {
-        Language: state.language,
+        language: state.language,
         objectName: state.objectName.trim(),
         properties: state.properties,
-        hasModes: state.hasMethods,
+        hasMethods: state.hasMethods,
       };
 
       const res = await generateCode(payload);

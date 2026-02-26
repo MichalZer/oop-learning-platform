@@ -5,11 +5,16 @@ const router = express.Router();
 
 // Save a practice session for the authenticated user
 router.post("/practice/save", auth, async (req, res) => {
-    const practice = await Practice.create({
+  const { language, features, generatedCode } = req.body;
+  if (!language || !features || !generatedCode) {
+    return res.status(400).json({ message: "Missing practice data" });
+  }
+
+  const practice = await Practice.create({
     userId: req.user.userId,
-    language: req.body.language,
-    features: req.body.features,
-    generatedCode: req.body.generatedCode,
+    language,
+    features,
+    generatedCode,
   });
 
   res.json(practice);
