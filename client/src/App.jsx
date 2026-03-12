@@ -6,7 +6,7 @@ import { isLoggedIn } from "./utils/auth";
 import TopicPage from "./pages/TopicPage";
 import BuilderPage from "./pages/BuilderPage";
 import MyPracticesPage from "./pages/MyPracticesPage";
-
+import QuizPage from "./pages/QuizPage";
 
 /**
  * Wrapper for protected routes
@@ -43,26 +43,36 @@ export default function App() {
         <Route
           path="/topic/:id"
           element={
-           <ProtectedRoute>
-             <TopicPage />
-           </ProtectedRoute>
-         }
-       />
-       <Route
-          path="/builder"
-         element={
-           <ProtectedRoute>
-             <BuilderPage />
-           </ProtectedRoute>
+            <ProtectedRoute>
+              <TopicPage />
+            </ProtectedRoute>
           }
-       />
-       
-       <Route
+        />
+
+        <Route
+          path="/builder"
+          element={
+            <ProtectedRoute>
+              <BuilderPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
           path="/my-practices"
-         element={
-           <ProtectedRoute>
-             <MyPracticesPage />
-           </ProtectedRoute>
+          element={
+            <ProtectedRoute>
+              <MyPracticesPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/quiz/:topicId"
+          element={
+            <ProtectedRoute>
+              <QuizPage />
+            </ProtectedRoute>
           }
         />
 
@@ -72,4 +82,3 @@ export default function App() {
     </BrowserRouter>
   );
 }
-

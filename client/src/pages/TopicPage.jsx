@@ -31,7 +31,7 @@ export default function TopicPage() {
 
         const [topicData, progData] = await Promise.all([
           getTopicById(id),
-          getMyProgress().catch(() => []), // אם אין בעיה בשרת/טוקן - לא נתקע
+          getMyProgress().catch(() => []), 
         ]);
 
         if (!alive) return;
@@ -71,6 +71,15 @@ export default function TopicPage() {
       <Typography variant="body1" sx={{ mt: 1, mb: 3 }}>
         {topic.description}
       </Typography>
+
+<Button
+  variant="contained"
+  component={Link}
+  to={`/quiz/${id}`}
+  sx={{ mb: 3 }}
+>
+  Start Quiz
+</Button>
 
       <Grid container spacing={2}>
         <Grid item xs={12} md={4}>

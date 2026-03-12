@@ -38,9 +38,9 @@ router.get('/:topicId', async (req, res) => {
 router.post("/submit", authMiddleware, async (req, res) => {
   try {
     const { topicId, language, answers } = req.body;
-    const userId = req.user.userId; // token payload uses userId
+    const userId = req.user.userId;
 
-    // basic validation to protect against double-click or empty payload
+    // validation
     if (!answers || !Array.isArray(answers) || answers.length === 0) {
       return res.status(400).json({ message: "Invalid answers" });
     }
@@ -54,7 +54,7 @@ router.post("/submit", authMiddleware, async (req, res) => {
     let correctCount = 0;
 
     quiz.questions.forEach((q, index) => {
-      if (answers[index] === q.correctAnswer) {
+      if (answers[index] === Number(q.correctAnswer)) {
         correctCount++;
       }
     });
@@ -75,7 +75,10 @@ router.post("/submit", authMiddleware, async (req, res) => {
       progress = new Progress({
         userId,
         topicId,
-        language
+        language,
+        attempts: 0,
+        bestScore: 0,
+        status: "in-progress"
       });
     }
 
