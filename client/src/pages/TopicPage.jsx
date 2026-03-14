@@ -1,6 +1,17 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Container, Typography, Grid, Card, CardContent, Button, Alert, List, ListItemButton, ListItemText } from "@mui/material";
+import {
+  Container,
+  Typography,
+  Grid,
+  Card,
+  CardContent,
+  Button,
+  Alert,
+  List,
+  ListItemButton,
+  ListItemText,
+} from "@mui/material";
 import { getTopicById } from "../services/topics.api";
 import { getMyProgress } from "../services/progress.api";
 
@@ -15,12 +26,6 @@ export default function TopicPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const progressMap = useMemo(() => {
-    const map = new Map();
-    for (const p of progress) map.set(String(p.lessonId), p);
-    return map;
-  }, [progress]);
-
   useEffect(() => {
     let alive = true;
 
@@ -31,7 +36,7 @@ export default function TopicPage() {
 
         const [topicData, progData] = await Promise.all([
           getTopicById(id),
-          getMyProgress().catch(() => []), 
+          getMyProgress().catch(() => []),
         ]);
 
         if (!alive) return;
@@ -52,14 +57,42 @@ export default function TopicPage() {
     }
 
     load();
-    return () => { alive = false; };
+    return () => {
+      alive = false;
+    };
   }, [id]);
 
   const selectedLesson = lessons.find((l) => l._id === selectedLessonId);
 
-  if (loading) return <Container sx={{ mt: 6 }}><Typography>Loading...</Typography></Container>;
-  if (error) return <Container sx={{ mt: 6 }}><Alert severity="error">{error}</Alert></Container>;
-  if (!topic) return <Container sx={{ mt: 6 }}><Typography>Topic not found</Typography></Container>;
+  const topicProgress = progress.find(
+    (p) => String(p.topicId) === String(id)
+  );
+
+  const topicCompleted = topicProgress?.status === "completed";
+
+  if (loading) {
+    return (
+      <Container sx={{ mt: 6 }}>
+        <Typography>Loading...</Typography>
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container sx={{ mt: 6 }}>
+        <Alert severity="error">{error}</Alert>
+      </Container>
+    );
+  }
+
+  if (!topic) {
+    return (
+      <Container sx={{ mt: 6 }}>
+        <Typography>Topic not found</Typography>
+      </Container>
+    );
+  }
 
   return (
     <Container sx={{ mt: 6 }}>
@@ -72,25 +105,26 @@ export default function TopicPage() {
         {topic.description}
       </Typography>
 
-<Button
-  variant="contained"
-  component={Link}
-  to={`/quiz/${id}`}
-  sx={{ mb: 3 }}
->
-  Start Quiz
-</Button>
+      <Button
+        variant="contained"
+        component={Link}
+        to={`/quiz/${id}`}
+        sx={{ mb: 3 }}
+      >
+        Start Quiz
+      </Button>
 
       <Grid container spacing={2}>
         <Grid item xs={12} md={4}>
           <Card>
             <CardContent>
-              <Typography variant="h6" sx={{ mb: 1 }}>Lessons</Typography>
+              <Typography variant="h6" sx={{ mb: 1 }}>
+                Lessons
+              </Typography>
 
               <List disablePadding>
                 {lessons.map((l) => {
-                  const p = progressMap.get(String(l._id));
-                  const completed = Boolean(p?.completed);
+                  const completed = topicCompleted;
 
                   return (
                     <ListItemButton
@@ -113,11 +147,15 @@ export default function TopicPage() {
         <Grid item xs={12} md={8}>
           <Card>
             <CardContent>
-              <Typography variant="h6" sx={{ mb: 1 }}>Theory</Typography>
+              <Typography variant="h6" sx={{ mb: 1 }}>
+                Theory
+              </Typography>
 
               {selectedLesson ? (
                 <>
-                  <Typography variant="h5" sx={{ mb: 2 }}>{selectedLesson.title}</Typography>
+                  <Typography variant="h5" sx={{ mb: 2 }}>
+                    {selectedLesson.title}
+                  </Typography>
                   <Typography sx={{ whiteSpace: "pre-wrap", lineHeight: 1.7 }}>
                     {selectedLesson.content}
                   </Typography>
