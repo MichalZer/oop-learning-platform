@@ -69,7 +69,7 @@ export default function Dashboard() {
 
   return (
     <Container sx={{ mt: 6 }}>
-      <Grid container alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
+      <Grid container alignItems="center" justifyContent="space-between" sx={{ mb: 2, height: 100 }}>
         <Grid item>
           <Typography variant="h4" gutterBottom>
             Dashboard

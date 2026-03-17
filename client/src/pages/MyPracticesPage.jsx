@@ -44,7 +44,7 @@ export default function MyPracticesPage() {
 
   return (
     <Container sx={{ mt: 6 }}>
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 ,height: 90}}>
        <Typography variant="h4">My Practices</Typography>
 
 

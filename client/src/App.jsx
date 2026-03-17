@@ -2,11 +2,15 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
+import ResetPassword from "./pages/ResetPassword";
 import { isLoggedIn } from "./utils/auth";
 import TopicPage from "./pages/TopicPage";
 import BuilderPage from "./pages/BuilderPage";
 import MyPracticesPage from "./pages/MyPracticesPage";
 import QuizPage from "./pages/QuizPage";
+import Navbar from "./components/Navbar";
 
 /**
  * Wrapper for protected routes
@@ -35,7 +39,10 @@ export default function App() {
           path="/dashboard"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <>
+                <Navbar />
+                <Dashboard />
+              </>
             </ProtectedRoute>
           }
         />
@@ -44,7 +51,10 @@ export default function App() {
           path="/topic/:id"
           element={
             <ProtectedRoute>
-              <TopicPage />
+              <>
+                <Navbar />
+                <TopicPage />
+              </>
             </ProtectedRoute>
           }
         />
@@ -53,7 +63,10 @@ export default function App() {
           path="/builder"
           element={
             <ProtectedRoute>
-              <BuilderPage />
+              <>
+                <Navbar />
+                <BuilderPage />
+              </>
             </ProtectedRoute>
           }
         />
@@ -62,7 +75,10 @@ export default function App() {
           path="/my-practices"
           element={
             <ProtectedRoute>
-              <MyPracticesPage />
+              <>
+                <Navbar />
+                <MyPracticesPage />
+              </>
             </ProtectedRoute>
           }
         />
@@ -71,7 +87,46 @@ export default function App() {
           path="/quiz/:topicId"
           element={
             <ProtectedRoute>
-              <QuizPage />
+              <>
+                <Navbar />
+                <QuizPage />
+              </>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <>
+                <Navbar />
+                <Profile />
+              </>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <>
+                <Navbar />
+                <Settings />
+              </>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/reset-password"
+          element={
+            <ProtectedRoute>
+              <>
+                <Navbar />
+                <ResetPassword />
+              </>
             </ProtectedRoute>
           }
         />
