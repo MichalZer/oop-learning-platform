@@ -1,35 +1,43 @@
-import { AppBar, Box, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, Toolbar, Typography, Button } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
 import UserMenu from "./UserMenu";
 
 export default function Navbar() {
   return (
-   <AppBar 
-  position="fixed" // משאיר את הסרגל למעלה גם כשגוללים, או "static" אם את מעדיפה שייעלם בגלילה
-  color="primary" 
-  sx={{ 
-    width: "100%", // מבטיח פריסה על כל רוחב המסך
-    left: 0, 
-    top: 0 
-  }}
->
-  <Toolbar>
-    <Typography 
-      variant="h6" 
-      component="div" 
-      sx={{ 
-        flexGrow: 1, // דוחף את התפריט של המשתמש לסוף השורה
-        textAlign: "left" ,// מבטיח שהטקסט יהיה בתחילת השורה
-       // backgroundColor: "#422bf1", // סגול כהה כמו בתמונה ששלחת
-         //backgroundImage: "linear-gradient(90deg, #215fca 10%, #8776b7 100%)"
+    <AppBar
+      position="fixed"
+      color="inherit"
+      elevation={1}
+      sx={{
+        borderBottom: 1,
+        borderColor: "divider",
+        backgroundColor: "background.paper",
       }}
     >
-      OOP Learning Platform
-    </Typography>
-    
-    <Box sx={{ display: "flex", alignItems: "center" }}>
-      <UserMenu />
-    </Box>
-  </Toolbar>
-</AppBar>
+      <Toolbar sx={{ justifyContent: "space-between", px: { xs: 2, md: 4 } }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2, flexWrap: "wrap" }}>
+          <Typography
+            component={RouterLink}
+            to="/dashboard"
+            variant="h6"
+            color="text.primary"
+            sx={{ textDecoration: "none", fontWeight: 700 }}
+          >
+            OOP Learning
+          </Typography>
+
+          <Button component={RouterLink} to="/dashboard" size="small" color="inherit">
+            Dashboard
+          </Button>
+          <Button component={RouterLink} to="/builder" size="small" color="inherit">
+            Builder
+          </Button>
+          <Button component={RouterLink} to="/my-practices" size="small" color="inherit">
+            Practices
+          </Button>
+        </Box>
+        <UserMenu />
+      </Toolbar>
+    </AppBar>
   );
 }

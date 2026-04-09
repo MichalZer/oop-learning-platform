@@ -1,4 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { ThemeProvider, CssBaseline } from "@mui/material";
+import theme from "./theme";
+import AppLayout from "./components/AppLayout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
@@ -10,7 +13,6 @@ import TopicPage from "./pages/TopicPage";
 import BuilderPage from "./pages/BuilderPage";
 import MyPracticesPage from "./pages/MyPracticesPage";
 import QuizPage from "./pages/QuizPage";
-import Navbar from "./components/Navbar";
 
 /**
  * Wrapper for protected routes
@@ -25,115 +27,99 @@ function ProtectedRoute({ children }) {
  */
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Default route */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Navigate to="/login" replace />} />
 
-        {/* Public routes */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
-        {/* Protected route */}
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <>
-                <Navbar />
-                <Dashboard />
-              </>
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <Dashboard />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/topic/:id"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <TopicPage />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/builder"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <BuilderPage />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-practices"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <MyPracticesPage />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/quiz/:topicId"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <QuizPage />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <Profile />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <Settings />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/reset-password"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <ResetPassword />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/topic/:id"
-          element={
-            <ProtectedRoute>
-              <>
-                <Navbar />
-                <TopicPage />
-              </>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/builder"
-          element={
-            <ProtectedRoute>
-              <>
-                <Navbar />
-                <BuilderPage />
-              </>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/my-practices"
-          element={
-            <ProtectedRoute>
-              <>
-                <Navbar />
-                <MyPracticesPage />
-              </>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/quiz/:topicId"
-          element={
-            <ProtectedRoute>
-              <>
-                <Navbar />
-                <QuizPage />
-              </>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <>
-                <Navbar />
-                <Profile />
-              </>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/settings"
-          element={
-            <ProtectedRoute>
-              <>
-                <Navbar />
-                <Settings />
-              </>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/reset-password"
-          element={
-            <ProtectedRoute>
-              <>
-                <Navbar />
-                <ResetPassword />
-              </>
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
-      </Routes>
-    </BrowserRouter>
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }

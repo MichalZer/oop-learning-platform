@@ -1,21 +1,15 @@
-import { Button, TextField, Box, Typography, Alert } from "@mui/material";
-import { useNavigate, Link } from "react-router-dom";
+import { Button, TextField, Typography, Alert, Paper, Stack, Container, Link } from "@mui/material";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { useState } from "react";
 import api from "../services/api";
 
-/*
- * Register page:
- * Sends: { name, email, password } to the backend.
- */
 export default function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
-
   const navigate = useNavigate();
 
   const handleRegister = async () => {
@@ -29,10 +23,7 @@ export default function Register() {
 
     try {
       setLoading(true);
-
-      // POST http://localhost:5000/api/auth/register
       await api.post("/auth/register", { name, email, password });
-
       setSuccess("Account created! Redirecting to login...");
       setTimeout(() => navigate("/login"), 800);
     } catch (err) {
@@ -47,64 +38,59 @@ export default function Register() {
   };
 
   return (
-    <Box sx={{ maxWidth: 420, mx: "auto", mt: 8 }}>
-      <Typography variant="h5" mb={2}>
-        Register
-      </Typography>
+    <Container maxWidth="xs">
+      <Paper elevation={4} sx={{ mt: 10, p: 4, borderRadius: 4 }}>
+        <Typography variant="h5" mb={1} fontWeight={700}>
+          Register
+        </Typography>
+        <Typography variant="body2" color="text.secondary" mb={3}>
+          Create your account and start building practical OOP lessons.
+        </Typography>
 
-      {error && (
-        <Alert severity="error" sx={{ mb: 2 }}>
-          {error}
-        </Alert>
-      )}
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
 
-      {success && (
-        <Alert severity="success" sx={{ mb: 2 }}>
-          {success}
-        </Alert>
-      )}
+        {success && (
+          <Alert severity="success" sx={{ mb: 2 }}>
+            {success}
+          </Alert>
+        )}
 
-      <TextField
-        label="Name"
-        fullWidth
-        margin="normal"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        autoComplete="name"
-      />
+        <Stack spacing={2}>
+          <TextField
+            label="Name"
+            fullWidth
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            autoComplete="name"
+          />
+          <TextField
+            label="Email"
+            fullWidth
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            autoComplete="email"
+          />
+          <TextField
+            label="Password"
+            type="password"
+            fullWidth
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="new-password"
+          />
+          <Button variant="contained" fullWidth onClick={handleRegister} disabled={loading}>
+            {loading ? "Creating..." : "Create Account"}
+          </Button>
+        </Stack>
 
-      <TextField
-        label="Email"
-        fullWidth
-        margin="normal"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        autoComplete="email"
-      />
-
-      <TextField
-        label="Password"
-        type="password"
-        fullWidth
-        margin="normal"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        autoComplete="new-password"
-      />
-
-      <Button
-        variant="contained"
-        fullWidth
-        sx={{ mt: 2 }}
-        onClick={handleRegister}
-        disabled={loading}
-      >
-        {loading ? "Creating..." : "Create Account"}
-      </Button>
-
-      <Typography variant="body2" sx={{ mt: 2 }}>
-        Already have an account? <Link to="/login">Login</Link>
-      </Typography>
-    </Box>
+        <Typography variant="body2" align="center" sx={{ mt: 3, color: "text.secondary" }}>
+          Already have an account? <Link component={RouterLink} to="/login">Login</Link>
+        </Typography>
+      </Paper>
+    </Container>
   );
 }
