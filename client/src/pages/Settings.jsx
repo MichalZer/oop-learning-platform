@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -12,36 +12,26 @@ import {
   FormControlLabel,
   Button,
 } from "@mui/material";
+import { useThemeContext } from "../context/ThemeContext";
 
 const STORAGE_KEY = "preferredLanguage";
-const THEME_KEY = "preferredTheme";
 
 export default function Settings() {
   const navigate = useNavigate();
+  const { isDarkMode, toggleTheme } = useThemeContext();
 
   const [language, setLanguage] = useState(() => {
     return localStorage.getItem(STORAGE_KEY) || "JavaScript";
   });
-  const [darkMode, setDarkMode] = useState(() => {
-    return localStorage.getItem(THEME_KEY) === "dark";
-  });
 
-  const handleChange = (event) => {
+  const handleLanguageChange = (event) => {
     const next = event.target.value;
     setLanguage(next);
     localStorage.setItem(STORAGE_KEY, next);
   };
 
   const handleThemeToggle = (event) => {
-    const isDark = event.target.checked;
-    setDarkMode(isDark);
-    localStorage.setItem(THEME_KEY, isDark ? "dark" : "light");
-
-    if (isDark) {
-      document.body.classList.add("dark-theme");
-    } else {
-      document.body.classList.remove("dark-theme");
-    }
+    toggleTheme(event.target.checked);
   };
 
   return (
@@ -63,7 +53,7 @@ export default function Settings() {
             id="preferred-language"
             value={language}
             label="Preferred Language"
-            onChange={handleChange}
+            onChange={handleLanguageChange}
           >
             <MenuItem value="JavaScript">JavaScript</MenuItem>
             <MenuItem value="Python">Python</MenuItem>
@@ -75,12 +65,12 @@ export default function Settings() {
         </Typography>
 
         <FormControlLabel
-          control={<Switch checked={darkMode} onChange={handleThemeToggle} />}
+          control={<Switch checked={isDarkMode} onChange={handleThemeToggle} />}
           label="Dark Mode"
         />
 
         <Typography sx={{ mt: 2 }}>
-          Current theme: <strong>{darkMode ? "Dark" : "Light"}</strong>
+          Current theme: <strong>{isDarkMode ? "Dark" : "Light"}</strong>
         </Typography>
       </Paper>
     </Box>

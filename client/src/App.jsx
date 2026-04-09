@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { ThemeProvider, CssBaseline } from "@mui/material";
-import theme from "./theme";
+import { CssBaseline, ThemeProvider as MuiThemeProvider } from "@mui/material";
+import { ThemeProvider, useThemeContext } from "./context/ThemeContext";
 import AppLayout from "./components/AppLayout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -23,11 +23,13 @@ function ProtectedRoute({ children }) {
 }
 
 /**
- * Main application routing
+ * Main application routing with dynamic theme
  */
-export default function App() {
+function AppContent() {
+  const { theme } = useThemeContext();
+
   return (
-    <ThemeProvider theme={theme}>
+    <MuiThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
         <Routes>
@@ -120,6 +122,17 @@ export default function App() {
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </BrowserRouter>
+    </MuiThemeProvider>
+  );
+}
+
+/**
+ * App wrapper with ThemeProvider
+ */
+export default function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
     </ThemeProvider>
   );
 }
