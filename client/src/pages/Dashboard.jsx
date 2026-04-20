@@ -59,6 +59,7 @@ export default function Dashboard() {
     }
 
     load();
+
     return () => {
       alive = false;
     };
@@ -71,7 +72,16 @@ export default function Dashboard() {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ mb: 4, display: "flex", flexWrap: "wrap", justifyContent: "space-between", gap: 2, alignItems: "center" }}>
+      <Box
+        sx={{
+          mb: 4,
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "space-between",
+          gap: 2,
+          alignItems: "center",
+        }}
+      >
         <Box>
           <Typography variant="h4" gutterBottom>
             Dashboard
@@ -85,7 +95,7 @@ export default function Dashboard() {
           <Button variant="contained" color="error" onClick={handleLogout}>
             Logout
           </Button>
-          <Button variant="outlined" onClick={() => navigate("/builder") }>
+          <Button variant="outlined" onClick={() => navigate("/builder")}>
             Open Builder
           </Button>
           <Button component={Link} to="/my-practices" variant="outlined">
@@ -97,14 +107,27 @@ export default function Dashboard() {
       {loading && <Typography sx={{ mt: 2 }}>Loading topics...</Typography>}
 
       {!loading && summary !== null && (
-        <Paper elevation={0} sx={{ p: 3, mb: 4, border: 1, borderColor: "divider", backgroundColor: "background.paper" }}>
+        <Paper
+          elevation={0}
+          sx={{
+            p: 3,
+            mb: 4,
+            border: 1,
+            borderColor: "divider",
+            backgroundColor: "background.paper",
+          }}
+        >
           <Typography variant="subtitle2" color="text.secondary" gutterBottom>
             Overall progress
           </Typography>
           <Box sx={{ display: "flex", alignItems: "center", gap: 2, flexWrap: "wrap" }}>
             <Typography variant="h6">{summary}% complete</Typography>
             <Box sx={{ flexGrow: 1 }}>
-              <LinearProgress variant="determinate" value={summary} sx={{ height: 10, borderRadius: 5 }} />
+              <LinearProgress
+                variant="determinate"
+                value={summary}
+                sx={{ height: 10, borderRadius: 5 }}
+              />
             </Box>
           </Box>
         </Paper>
@@ -128,14 +151,28 @@ export default function Dashboard() {
                   <Typography variant="h6" gutterBottom>
                     {t.title}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ mb: 2 }}
+                  >
                     {t.description}
                   </Typography>
-                  {isCompleted && <Chip label="Completed" color="success" size="small" />}
+
+                  {isCompleted && (
+                    <Chip label="Completed" color="success" size="small" />
+                  )}
                 </CardContent>
+
                 <CardActions sx={{ mt: "auto", px: 3, pb: 3 }}>
-                  <Button variant="contained" fullWidth onClick={() => navigate(`/topic/${t._id}`)}>
-                    Start learning
+                  <Button
+                    variant={isCompleted ? "outlined" : "contained"}
+                    color={isCompleted ? "success" : "primary"}
+                    fullWidth
+                    onClick={() => navigate(`/topic/${t._id}`)}
+                  >
+                    {isCompleted ? "Completed" : "Start learning"}
                   </Button>
                 </CardActions>
               </Card>

@@ -5,7 +5,7 @@ import auth from "../middlewares/auth.js";
 
 const router = express.Router();
 
-// Get progress for a specific user
+// Get all progress records for the current user
 router.get("/progress", auth, async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -16,23 +16,38 @@ router.get("/progress", auth, async (req, res) => {
   }
 });
 
-// endpoint returning percentage of completed topics across entire course
+// Get overall course progress by completed topics
 router.get("/progress/summary", auth, async (req, res) => {
   try {
     const userId = req.user.userId;
-    const totalTopics = await Topic.countDocuments();
-    const completedTopics = await Progress.countDocuments({
+
+    const topics = await Topic.find().select("_id");
+    const validTopicIds = topics.map((t) => String(t._id));
+    const totalTopics = validTopicIds.length;
+
+    const completedProgress = await Progress.find({
       userId,
       status: "completed",
-    });
+    }).select("topicId");
+
+    const uniqueCompletedTopicIds = [
+      ...new Set(
+        completedProgress
+          .map((p) => String(p.topicId))
+          .filter((topicId) => validTopicIds.includes(topicId))
+      ),
+    ];
+
+    const completedTopicsCount = uniqueCompletedTopicIds.length;
+
     const progress =
       totalTopics === 0
         ? 0
-        : Math.round((completedTopics / totalTopics) * 100);
+        : Math.round((completedTopicsCount / totalTopics) * 100);
+
     res.json({ progress });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
-
 export default router;

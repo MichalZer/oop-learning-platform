@@ -1,12 +1,12 @@
-import express from 'express';
-import Quiz from '../models/Quiz.js';
+import express from "express";
+import Quiz from "../models/Quiz.js";
 import Progress from "../models/progress.js";
 import authMiddleware from "../middlewares/auth.js";
 
 const router = express.Router();
 
-// Get all quizzes
-router.get('/:topicId', async (req, res) => {
+// Get quiz by topic
+router.get("/:topicId", async (req, res) => {
   try {
     const { topicId } = req.params;
     const { lang } = req.query;
@@ -20,10 +20,12 @@ router.get('/:topicId', async (req, res) => {
     if (!quiz || quiz.questions.length === 0) {
       return res.status(404).json({ message: "Quiz not found" });
     }
+
     const safeQuestions = quiz.questions.map((q) => ({
       _id: q._id,
       question: q.questionText,
       options: q.options,
+      codeSnippet: q.codeSnippet || "",
     }));
 
     res.json({ questions: safeQuestions });
@@ -31,9 +33,6 @@ router.get('/:topicId', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-
-
-
 
 router.post("/submit", authMiddleware, async (req, res) => {
   try {
@@ -59,16 +58,13 @@ router.post("/submit", authMiddleware, async (req, res) => {
       }
     });
 
-    const score = Math.round(
-      (correctCount / quiz.questions.length) * 100
-    );
-
+    const score = Math.round((correctCount / quiz.questions.length) * 100);
     const passed = score >= 80;
 
     let progress = await Progress.findOne({
       userId,
       topicId,
-      language
+      language,
     });
 
     if (!progress) {
@@ -78,7 +74,7 @@ router.post("/submit", authMiddleware, async (req, res) => {
         language,
         attempts: 0,
         bestScore: 0,
-        status: "in-progress"
+        status: "in-progress",
       });
     }
 
@@ -96,11 +92,11 @@ router.post("/submit", authMiddleware, async (req, res) => {
 
     res.json({
       score,
-      passed
+      passed,
     });
-
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
+
 export default router;

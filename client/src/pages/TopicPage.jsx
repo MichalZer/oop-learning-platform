@@ -20,6 +20,7 @@ import { getMyProgress } from "../services/progress.api";
 
 export default function TopicPage() {
   const { id } = useParams();
+
   const [topic, setTopic] = useState(null);
   const [lessons, setLessons] = useState([]);
   const [progress, setProgress] = useState([]);
@@ -42,11 +43,14 @@ export default function TopicPage() {
 
         if (!alive) return;
 
+        const lessonsData = topicData.lessons || [];
+
         setTopic(topicData.topic);
-        setLessons(topicData.lessons || []);
+        setLessons(lessonsData);
         setProgress(progData || []);
-        const first = (topicData.lessons || [])[0];
-        setSelectedLessonId(first?._id || null);
+
+        const firstLesson = lessonsData[0];
+        setSelectedLessonId(firstLesson?._id || null);
       } catch (e) {
         if (!alive) return;
         setError(e?.response?.data?.message || "Failed to load topic");
@@ -57,13 +61,17 @@ export default function TopicPage() {
     }
 
     load();
+
     return () => {
       alive = false;
     };
   }, [id]);
 
-  const selectedLesson = lessons.find((l) => l._id === selectedLessonId);
-  const topicProgress = progress.find((p) => String(p.topicId) === String(id));
+  const selectedLesson = lessons.find((lesson) => lesson._id === selectedLessonId);
+
+  const topicProgress = progress.find(
+    (p) => String(p.topicId) === String(id)
+  );
   const topicCompleted = topicProgress?.status === "completed";
 
   if (loading) {
@@ -92,7 +100,13 @@ export default function TopicPage() {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
-      <Stack direction={{ xs: "column", sm: "row" }} justifyContent="space-between" alignItems="flex-start" spacing={2} sx={{ mb: 3 }}>
+      <Stack
+        direction={{ xs: "column", sm: "row" }}
+        justifyContent="space-between"
+        alignItems="flex-start"
+        spacing={2}
+        sx={{ mb: 3 }}
+      >
         <Box>
           <Typography variant="h4" gutterBottom>
             {topic.title}
@@ -100,6 +114,15 @@ export default function TopicPage() {
           <Typography variant="body1" color="text.secondary">
             {topic.description}
           </Typography>
+
+          {topicCompleted && (
+            <Chip
+              label="Topic Completed"
+              color="success"
+              size="small"
+              sx={{ mt: 2 }}
+            />
+          )}
         </Box>
 
         <Button component={Link} to="/dashboard" variant="text">
@@ -107,8 +130,13 @@ export default function TopicPage() {
         </Button>
       </Stack>
 
-      <Button variant="contained" component={Link} to={`/quiz/${id}`} sx={{ mb: 3 }}>
-        Start Quiz
+      <Button
+        variant="contained"
+        component={Link}
+        to={`/quiz/${id}`}
+        sx={{ mb: 3 }}
+      >
+        Start Final Quiz
       </Button>
 
       <Grid container spacing={3}>
@@ -118,19 +146,19 @@ export default function TopicPage() {
               <Typography variant="h6" sx={{ mb: 2 }}>
                 Lessons
               </Typography>
+
               <List disablePadding>
-                {lessons.map((l) => (
+                {lessons.map((lesson, index) => (
                   <ListItemButton
-                    key={l._id}
-                    selected={l._id === selectedLessonId}
-                    onClick={() => setSelectedLessonId(l._id)}
+                    key={lesson._id}
+                    selected={lesson._id === selectedLessonId}
+                    onClick={() => setSelectedLessonId(lesson._id)}
                     sx={{ mb: 1, borderRadius: 2 }}
                   >
                     <ListItemText
-                      primary={l.title}
-                      secondary={topicCompleted ? "Completed" : "Not completed"}
+                      primary={`${index + 1}. ${lesson.title}`}
+                      secondary="Open lesson"
                     />
-                    {topicCompleted && <Chip label="Done" color="success" size="small" />}
                   </ListItemButton>
                 ))}
               </List>
@@ -142,14 +170,22 @@ export default function TopicPage() {
           <Card>
             <CardContent>
               <Typography variant="h6" sx={{ mb: 2 }}>
-                Theory
+                Lesson
               </Typography>
+
               {selectedLesson ? (
                 <>
                   <Typography variant="h5" sx={{ mb: 2 }}>
                     {selectedLesson.title}
                   </Typography>
-                  <Typography sx={{ whiteSpace: "pre-wrap", lineHeight: 1.8, color: "text.secondary" }}>
+
+                  <Typography
+                    sx={{
+                      whiteSpace: "pre-wrap",
+                      lineHeight: 1.8,
+                      color: "text.secondary",
+                    }}
+                  >
                     {selectedLesson.content}
                   </Typography>
                 </>

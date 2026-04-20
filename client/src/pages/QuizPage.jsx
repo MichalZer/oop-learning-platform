@@ -14,18 +14,32 @@ import {
 } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import { getQuizByTopic, submitQuiz } from "../services/quiz.api";
+import { getTopicById } from "../services/topics.api";
 
 export default function QuizPage() {
   const { topicId } = useParams();
 
+  const [topic, setTopic] = useState(null);
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState([]);
-  const [language] = useState("js");
 
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [result, setResult] = useState(null);
+
+  const getLanguageByTopicTitle = (title) => {
+    if (!title) return "";
+
+    const normalized = title.toLowerCase();
+
+    if (normalized.includes("javascript")) return "js";
+    if (normalized.includes("python")) return "python";
+    if (normalized.includes("c++")) return "cpp";
+    if (normalized.includes("oop foundations")) return "general";
+
+    return "";
+  };
 
   useEffect(() => {
     let alive = true;
@@ -34,6 +48,17 @@ export default function QuizPage() {
       try {
         setError("");
         setLoading(true);
+
+        const topicData = await getTopicById(topicId);
+        if (!alive) return;
+
+        setTopic(topicData.topic);
+
+        const language = getLanguageByTopicTitle(topicData.topic?.title);
+        if (!language) {
+          setError("Could not determine quiz language for this topic.");
+          return;
+        }
 
         const data = await getQuizByTopic(topicId, language);
         if (!alive) return;
@@ -55,7 +80,7 @@ export default function QuizPage() {
     return () => {
       alive = false;
     };
-  }, [topicId, language]);
+  }, [topicId]);
 
   const handleAnswerChange = (questionIndex, optionIndex) => {
     setAnswers((prev) => {
@@ -77,6 +102,8 @@ export default function QuizPage() {
 
     try {
       setSubmitting(true);
+
+      const language = getLanguageByTopicTitle(topic?.title);
 
       const data = await submitQuiz({
         topicId,
@@ -102,14 +129,21 @@ export default function QuizPage() {
           mb: 2,
         }}
       >
-        <Typography variant="h4">Quiz</Typography>
+        <Typography variant="h4">Final Quiz</Typography>
 
         <Button component={Link} to="/dashboard">
           ← Back to Dashboard
         </Button>
       </Box>
 
+      {topic && (
+        <Typography variant="body1" sx={{ mb: 2 }} color="text.secondary">
+          Topic: {topic.title}
+        </Typography>
+      )}
+
       {loading && <Typography>Loading quiz...</Typography>}
+
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}
@@ -124,6 +158,24 @@ export default function QuizPage() {
               <Typography variant="h6" sx={{ mb: 2 }}>
                 {qIndex + 1}. {q.question}
               </Typography>
+
+              {q.codeSnippet && (
+                <Box
+                  sx={{
+                    mb: 2,
+                    p: 2,
+                    borderRadius: 2,
+                    bgcolor: "grey.900",
+                    color: "grey.100",
+                    fontFamily: "monospace",
+                    fontSize: "0.95rem",
+                    whiteSpace: "pre-wrap",
+                    overflowX: "auto",
+                  }}
+                >
+                  {q.codeSnippet}
+                </Box>
+              )}
 
               <FormControl>
                 <RadioGroup
@@ -152,6 +204,10 @@ export default function QuizPage() {
         >
           {submitting ? "Submitting..." : "Submit Quiz"}
         </Button>
+      )}
+
+      {!loading && !result && questions.length === 0 && !error && (
+        <Typography>No quiz questions found for this topic.</Typography>
       )}
 
       {!loading && result && (
