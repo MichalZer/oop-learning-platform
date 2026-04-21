@@ -24,7 +24,7 @@ export function ThemeProvider({ children }) {
         mode: isDarkMode ? "dark" : "light",
         ...(isDarkMode
           ? {
-              primary: { main: "#6c8fff" },
+              primary: { main: "#6c8fff", lighter: "rgba(108, 143, 255, 0.12)" },
               secondary: { main: "#9d84ff" },
               background: {
                 default: "#121b2d",
@@ -36,7 +36,7 @@ export function ThemeProvider({ children }) {
               },
             }
           : {
-              primary: { main: "#2f56a7" },
+              primary: { main: "#2f56a7", lighter: "rgba(47, 86, 167, 0.12)" },
               secondary: { main: "#6c63ff" },
               background: {
                 default: "#eef3fb",

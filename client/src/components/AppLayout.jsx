@@ -11,8 +11,8 @@ export default function AppLayout({ children }) {
         sx={{
           minHeight: "100vh",
           backgroundColor: "background.default",
-          py: 4,
-          px: { xs: 2, md: 4 },
+          py: { xs: 3, sm: 4, md: 5 },
+          px: { xs: 2, sm: 3, md: 4 },
         }}
       >
         {children}
