@@ -26,9 +26,6 @@ export default function Navbar() {
             OOP Learning
           </Typography>
 
-          <Button component={RouterLink} to="/dashboard" size="small" color="inherit">
-            Dashboard
-          </Button>
           <Button component={RouterLink} to="/builder" size="small" color="inherit">
             Builder
           </Button>

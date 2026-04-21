@@ -63,7 +63,6 @@ export default function UserMenu() {
         <MenuItem onClick={() => handleNavigate("/settings")}>Settings</MenuItem>
         <MenuItem onClick={() => handleNavigate("/reset-password")}>Reset Password</MenuItem>
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
-         <MenuItem onClick={() => handleNavigate("/")}>Dashboard</MenuItem>
       </Menu>
     </>
   );

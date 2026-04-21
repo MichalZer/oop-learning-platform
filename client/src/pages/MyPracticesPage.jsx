@@ -93,7 +93,7 @@ export default function MyPracticesPage() {
                     mt: 2,
                     p: 2,
                     borderRadius: 2,
-                    bgcolor: "#f6f6f6",
+                    backgroundColor: "background.default",
                     overflow: "auto",
                     whiteSpace: "pre-wrap",
                     maxHeight: 220,

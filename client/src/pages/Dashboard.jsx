@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import {
-  Button,
   Container,
   Typography,
   Card,
@@ -11,11 +10,10 @@ import {
   LinearProgress,
   Box,
   Chip,
-  Stack,
+  Button,
   Paper,
 } from "@mui/material";
-import { useNavigate, Link } from "react-router-dom";
-import { removeToken } from "../utils/auth";
+import { useNavigate } from "react-router-dom";
 import { getTopics } from "../services/topics.api";
 import { getProgressSummary, getMyProgress } from "../services/progress.api";
 
@@ -26,11 +24,6 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [summary, setSummary] = useState(null);
   const navigate = useNavigate();
-
-  const handleLogout = () => {
-    removeToken();
-    window.location.href = "/login";
-  };
 
   useEffect(() => {
     let alive = true;
@@ -75,33 +68,15 @@ export default function Dashboard() {
       <Box
         sx={{
           mb: 4,
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "space-between",
-          gap: 2,
-          alignItems: "center",
+          textAlign: { xs: "center", md: "left" },
         }}
       >
-        <Box>
-          <Typography variant="h4" gutterBottom>
-            Dashboard
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
-            Choose a topic and continue your OOP practice.
-          </Typography>
-        </Box>
-
-        <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-          <Button variant="contained" color="error" onClick={handleLogout}>
-            Logout
-          </Button>
-          <Button variant="outlined" onClick={() => navigate("/builder")}>
-            Open Builder
-          </Button>
-          <Button component={Link} to="/my-practices" variant="outlined">
-            My Practices
-          </Button>
-        </Stack>
+        <Typography variant="h5" gutterBottom sx={{ fontWeight: 700 }}>
+          Learning Topics
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Choose a topic and continue your OOP practice
+        </Typography>
       </Box>
 
       {loading && <Typography sx={{ mt: 2 }}>Loading topics...</Typography>}
@@ -139,23 +114,34 @@ export default function Dashboard() {
         </Alert>
       )}
 
-      <Grid container spacing={3}>
+      <Grid container spacing={2} sx={{ justifyContent: { xs: "center", md: "flex-start" } }}>
         {topics.map((t) => {
           const topicProgress = progressMap.get(String(t._id));
           const isCompleted = topicProgress?.status === "completed";
 
           return (
-            <Grid item xs={12} md={6} lg={4} key={t._id}>
-              <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+            <Grid item xs={12} sm={6} md={5} lg={4} key={t._id} sx={{ maxWidth: "100%" }}>
+              <Card
+                sx={{
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  transition: "transform 0.2s, box-shadow 0.2s",
+                  "&:hover": {
+                    transform: "translateY(-4px)",
+                    boxShadow: "0 24px 80px rgba(15, 23, 42, 0.12)",
+                  },
+                }}
+              >
                 <CardContent>
-                  <Typography variant="h6" gutterBottom>
+                  <Typography variant="h6" gutterBottom sx={{ fontWeight: 700 }}>
                     {t.title}
                   </Typography>
 
                   <Typography
                     variant="body2"
                     color="text.secondary"
-                    sx={{ mb: 2 }}
+                    sx={{ mb: 2, lineHeight: 1.6 }}
                   >
                     {t.description}
                   </Typography>
@@ -165,10 +151,11 @@ export default function Dashboard() {
                   )}
                 </CardContent>
 
-                <CardActions sx={{ mt: "auto", px: 3, pb: 3 }}>
+                <CardActions sx={{ mt: "auto", p: 2, gap: 1 }}>
                   <Button
                     variant={isCompleted ? "outlined" : "contained"}
                     color={isCompleted ? "success" : "primary"}
+                    size="small"
                     fullWidth
                     onClick={() => navigate(`/topic/${t._id}`)}
                   >

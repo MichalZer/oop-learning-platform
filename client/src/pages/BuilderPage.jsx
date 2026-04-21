@@ -49,10 +49,13 @@ function CodePreview({ code }) {
             m: 0,
             p: 2,
             borderRadius: 2,
-            bgcolor: "#f6f6f6",
+            bgcolor: "background.default",
+            color: "text.primary",
             overflow: "auto",
             minHeight: 220,
             whiteSpace: "pre-wrap",
+            border: 1,
+            borderColor: "divider",
           }}
         >
           {code || "// Click “Generate Code” to see output..."}
@@ -164,11 +167,22 @@ export default function BuilderPage() {
 
 
   return (
-    <Container sx={{ mt: 6 }}>
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
-        <Typography variant="h4">Practice Builder</Typography>
-        <Button component={Link} to="/dashboard">
-          ← Back to Dashboard
+    <Container maxWidth="lg">
+      <Box
+        sx={{
+          mb: 4,
+          display: "flex",
+          flexDirection: { xs: "column", sm: "row" },
+          justifyContent: "space-between",
+          alignItems: { xs: "flex-start", sm: "center" },
+          gap: 2,
+        }}
+      >
+        <Typography variant="h5" sx={{ fontWeight: 700 }}>
+          Practice Builder
+        </Typography>
+        <Button component={Link} to="/dashboard" variant="outlined" size="small">
+          ← Back
         </Button>
       </Box>
 
@@ -176,9 +190,9 @@ export default function BuilderPage() {
       {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
 
 
-      <Grid container spacing={2}>
+      <Grid container spacing={3}>
         {/* Left: Form */}
-        <Grid item xs={12} md={5}>
+        <Grid item xs={12} md={6} lg={5}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -277,7 +291,7 @@ export default function BuilderPage() {
         </Grid>
 
         {/* Right: Code */}
-        <Grid item xs={12} md={7}>
+        <Grid item xs={12} md={6} lg={7}>
           <CodePreview code={code} />
         </Grid>
       </Grid>
