@@ -13,6 +13,7 @@ import TopicPage from "./pages/TopicPage";
 import BuilderPage from "./pages/BuilderPage";
 import MyPracticesPage from "./pages/MyPracticesPage";
 import QuizPage from "./pages/QuizPage";
+import ScrollToTop from "./components/ScrollToTop";
 
 /**
  * Wrapper for protected routes
@@ -32,6 +33,7 @@ function AppContent() {
     <MuiThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
 

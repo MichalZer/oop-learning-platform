@@ -3,7 +3,6 @@ import { useParams, Link } from "react-router-dom";
 import {
   Container,
   Typography,
-  Grid,
   Card,
   CardContent,
   Button,
@@ -17,6 +16,7 @@ import {
 } from "@mui/material";
 import { getTopicById } from "../services/topics.api";
 import { getMyProgress } from "../services/progress.api";
+import SplitContentLayout from "../components/SplitContentLayout";
 
 export default function TopicPage() {
   const { id } = useParams();
@@ -66,6 +66,11 @@ export default function TopicPage() {
       alive = false;
     };
   }, [id]);
+
+  useEffect(() => {
+    if (!selectedLessonId) return;
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [selectedLessonId]);
 
   const selectedLesson = lessons.find((lesson) => lesson._id === selectedLessonId);
 
@@ -139,8 +144,8 @@ export default function TopicPage() {
         Start Final Quiz
       </Button>
 
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={4}>
+      <SplitContentLayout
+        sidebar={
           <Card>
             <CardContent>
               <Typography variant="h6" sx={{ mb: 2 }}>
@@ -164,10 +169,9 @@ export default function TopicPage() {
               </List>
             </CardContent>
           </Card>
-        </Grid>
-
-        <Grid item xs={12} md={8}>
-          <Card>
+        }
+        content={
+          <Card sx={{ minHeight: 420 }}>
             <CardContent>
               <Typography variant="h6" sx={{ mb: 2 }}>
                 Lesson
@@ -194,8 +198,8 @@ export default function TopicPage() {
               )}
             </CardContent>
           </Card>
-        </Grid>
-      </Grid>
+        }
+      />
     </Container>
   );
 }
