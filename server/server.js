@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 5000;
  * Starts the Express server and listens for incoming connections.
  * This is the final step to get the backend running.
  */
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });
