@@ -16,7 +16,7 @@ import {
 } from "./javascript.seed.js";
 import { pythonLessonsSeed, pythonQuizSeed } from "./python.seed.js";
 import { cppLessonsSeed, cppQuizSeed } from "./cpp.seed.js";
-import Progress from "../models/progress.js";
+import Progress from "../models/Progress.js";
 
 dotenv.config();
 

@@ -1,6 +1,6 @@
 import express from "express";
 import Quiz from "../models/Quiz.js";
-import Progress from "../models/progress.js";
+import Progress from "../models/Progress.js";
 import authMiddleware from "../middlewares/auth.js";
 
 const router = express.Router();

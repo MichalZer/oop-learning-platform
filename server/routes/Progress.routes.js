@@ -1,5 +1,5 @@
 import express from "express";
-import Progress from "../models/progress.js";
+import Progress from "../models/Progress.js";
 import Topic from "../models/Topic.js";
 import auth from "../middlewares/auth.js";
 
