@@ -6,7 +6,7 @@ import { getToken } from "../utils/auth";
  * Our backend auth routes are under: /api/auth
  */
 const api = axios.create({
-  baseURL: "http://127.0.0.1:5000/api",
+  baseURL: "/api",
 });
 
 
