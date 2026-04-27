@@ -17,9 +17,9 @@ const frontendPath = fs.existsSync(clientDistPath)
 if (fs.existsSync(frontendPath)) {
   app.use(express.static(frontendPath));
 
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(frontendPath, "index.html"));
-  });
+  app.get(/.*/, (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
+});
 } else {
   console.warn(
     `Frontend build directory not found. Static files are disabled. Checked: ${clientDistPath} and ${clientBuildPath}`
